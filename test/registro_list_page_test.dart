@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:pendencias/features/registros/domain/categoria.dart';
 import 'package:pendencias/features/registros/domain/registro_campo.dart';
 import 'package:pendencias/features/registros/domain/registro_repository.dart';
@@ -6,31 +7,30 @@ import 'package:pendencias/main.dart';
 
 void main() {
   testWidgets(
-      'apresenta o estado vazio quando não existem registros',
-      (tester) async {
-        await tester.pumpWidget(
-          RegistroCampoApp(
-            repository: _RepositorioVazio(),
-          ),
-        );
+    'apresenta o estado vazio quando não existem registros',
+    (tester) async {
+      await tester.pumpWidget(
+        RegistroCampoApp(
+          repository: _RepositorioVazio(),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        expect(
+      expect(
         find.text('Nenhum registro cadastrado'),
-            findsOneWidget,
-        );
+        findsOneWidget,
+      );
 
-        expect(
-            find.text('Criar registro'),
-             findsOneWidget,
-        );
-      },
+      expect(
+        find.text('Criar registro'),
+        findsOneWidget,
+      );
+    },
   );
 }
 
 class _RepositorioVazio implements RegistroRepository {
-
   @override
   Future<RegistroCampo?> buscarPorId(String id) async {
     return null;
@@ -38,11 +38,11 @@ class _RepositorioVazio implements RegistroRepository {
 
   @override
   Future<List<RegistroCampo>> listar() async {
-    return const[];
+    return const [];
   }
 
   @override
-  Future<List<Categoria>> listarCategoria() async {
+  Future<List<Categoria>> listarCategorias() async {
     return const [
       Categoria(
         id: 1,

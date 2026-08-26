@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import '../domain/registro_campo.dart';
 import '../domain/registro_repository.dart';
 import 'registro_form_page.dart';

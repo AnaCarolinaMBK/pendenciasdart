@@ -26,7 +26,7 @@ class SqliteRegistroRepository  implements RegistroRepository {
 
   @override
   Future<void> inserir(RegistroCampo registro) {
-    return _dao.inserir(registro);
+    return _dao.insert(registro);
   }
 
   @override

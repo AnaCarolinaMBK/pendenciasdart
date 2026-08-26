@@ -336,6 +336,15 @@ class _RegistroFormPageState extends State<RegistroFormPage> {
   }
 
 
+    // Formata a data para o formato DD/MM/AAAA.
+  String _formatarData(DateTime data) {
+    final dia = data.day.toString().padLeft(2, '0');
+    final mes = data.month.toString().padLeft(2, '0');
+
+    return '$dia/$mes/${data.year}';
+  }
+
+
   // Constrói a interface da tela.
   @override
   Widget build(BuildContext context) {
@@ -612,7 +621,6 @@ class _RegistroFormPageState extends State<RegistroFormPage> {
                 ),
 
 
-                // Ícone do calendário.
                 trailing: const Icon(
                   Icons.calendar_month_outlined,
                 ),
