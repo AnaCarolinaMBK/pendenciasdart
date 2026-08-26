@@ -4,11 +4,13 @@ import '../domain/registro_campo.dart';
 import '../domain/registro_repository.dart';
 import 'registro_form_page.dart';
 
-class RegistroListPage extends  StatelessWidget {
+class RegistroListPage extends StatefulWidget {
   const RegistroListPage({
     super.key,
     required this.repository,
-});
+  });
+
+  final RegistroRepository repository;
 
   @override
   State<RegistroListPage> createState() {
@@ -17,11 +19,10 @@ class RegistroListPage extends  StatelessWidget {
 }
 
 class _RegistroListPageState extends State<RegistroListPage> {
-
   late Future<List<RegistroCampo>> _registrosFuture;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _registrosFuture = widget.repository.listar();
   }
@@ -33,19 +34,18 @@ class _RegistroListPageState extends State<RegistroListPage> {
 
     await _registrosFuture;
   }
+
   Future<void> _abrirFormulario([
     RegistroCampo? registro,
   ]) async {
-
     final alterou = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-          builder: (context) {
-            return RegistroFormPage(
-              repository: widget.repository,
-
-              registro: registro,
-            );
-          },
+        builder: (context) {
+          return RegistroFormPage(
+            repository: widget.repository,
+            registro: registro,
+          );
+        },
       ),
     );
 
@@ -55,13 +55,12 @@ class _RegistroListPageState extends State<RegistroListPage> {
   }
 
   Future<void> _confirmarExclusao(
-      RegistroCampo registro,
-      ) async{
-
+    RegistroCampo registro,
+  ) async {
     final confirmou = await showDialog<bool>(
       context: context,
       builder: (context) {
-        return AlertDialog (
+        return AlertDialog(
           title: const Text('Excluir registro?'),
 
           content: Text(
@@ -69,18 +68,18 @@ class _RegistroListPageState extends State<RegistroListPage> {
           ),
 
           actions: [
-            TextButton (
-              onPressed: (){
-                Navigator.of(context).pop(true);
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
               },
               child: const Text('Cancelar'),
             ),
 
             FilledButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child:  const Text('Excluir'),
+              child: const Text('Excluir'),
             ),
           ],
         );
@@ -90,20 +89,21 @@ class _RegistroListPageState extends State<RegistroListPage> {
     if (confirmou != true) {
       return;
     }
+
     try {
       await widget.repository.remover(registro.id);
+
       await _recarregar();
     } catch (error) {
-
       if (!mounted) {
         return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text(
-                'Não foi possivel excluir o registro.'
-            ),
+          content: Text(
+            'Não foi possível excluir o registro.',
+          ),
         ),
       );
     }
@@ -119,18 +119,19 @@ class _RegistroListPageState extends State<RegistroListPage> {
           IconButton(
             onPressed: _recarregar,
             tooltip: 'Atualizar',
-            icon:  const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh),
           ),
         ],
       ),
 
       body: FutureBuilder<List<RegistroCampo>>(
         future: _registrosFuture,
-        builder: (context, snapshot) {
 
+        builder: (context, snapshot) {
           if (
-          snapshot.connectionState ==
-              ConnectionState.waiting) {
+            snapshot.connectionState ==
+                ConnectionState.waiting
+          ) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -147,80 +148,84 @@ class _RegistroListPageState extends State<RegistroListPage> {
 
           if (registros.isEmpty) {
             return _EmptyState(
-
               onCreate: _abrirFormulario,
             );
           }
 
           return RefreshIndicator(
-              onRefresh: _recarregar,
-              child: ListView.separated(
-            padding: const EdgeInsets.fromLTRB(
-              16, 12, 16, 88,
-            ),
+            onRefresh: _recarregar,
 
-                itemCount: registros.length,
+            child: ListView.separated(
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                12,
+                16,
+                88,
+              ),
 
-                separatorBuilder: (_, _){
-                   return const SizedBox(height: 8);
-                },
+              itemCount: registros.length,
 
-                itemBuilder: (context, index) {
-                  final registro = registros[index];
+              separatorBuilder: (_, _) {
+                return const SizedBox(height: 8);
+              },
 
-                  return Card (
-                    child: ListTile(
-                      onTap: () {
-                        _abrirFormulario(registro);
-                      },
+              itemBuilder: (context, index) {
+                final registro = registros[index];
 
-                      title: Text(registro.titulo),
+                return Card(
+                  child: ListTile(
+                    onTap: () {
+                      _abrirFormulario(registro);
+                    },
 
-                      subtitle: Text(
-                        '${registro.categoriaNome ?? 'Sem categoria'}   '
-                            '${_formatarData(registro.dataVisita)}',
-                      ),
+                    title: Text(registro.titulo),
 
-                      leading:  CircleAvatar(
-                        child: Icon(
-                          _iconeSituacao(registro.situacao),
-                        ),
-                      ),
+                    subtitle: Text(
+                      '${registro.categoriaNome ?? 'Sem categoria'}   '
+                      '${_formatarData(registro.dataVisita)}',
+                    ),
 
-
-                      trailing: PopupMenuButton<String>(
-                          onSelected: (value) {
-                            if (value == 'editar') {
-                              _confirmarExclusao(registro);
-                            }
-                          },
-
-                        itemBuilder: (context) {
-                            return const [
-                              PopupMenuItem(
-                                value: 'edidar',
-                                child:  Text('Editar'),
-                              ),
-                              PopupMenuItem(
-                                value: 'excluir',
-                                child: Text('Excluir'),
-                              ),
-                            ];
-                        },
+                    leading: CircleAvatar(
+                      child: Icon(
+                        _iconeSituacao(registro.situacao),
                       ),
                     ),
-                  );
-                },
+
+                    trailing: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        if (value == 'editar') {
+                          _abrirFormulario(registro);
+                        } else if (value == 'excluir') {
+                          _confirmarExclusao(registro);
+                        }
+                      },
+
+                      itemBuilder: (context) {
+                        return const [
+                          PopupMenuItem(
+                            value: 'editar',
+                            child: Text('Editar'),
+                          ),
+
+                          PopupMenuItem(
+                            value: 'excluir',
+                            child: Text('Excluir'),
+                          ),
+                        ];
+                      },
+                    ),
+                  ),
+                );
+              },
             ),
           );
-
         },
       ),
 
       floatingActionButton: FloatingActionButton.extended(
-          onPressed: _abrirFormulario,
-           icon: const Icon(Icons.add),
-           label: const Text('Novo'),
+        onPressed: _abrirFormulario,
+        icon: const Icon(Icons.add),
+        label: const Text('Novo'),
       ),
     );
   }
@@ -228,12 +233,13 @@ class _RegistroListPageState extends State<RegistroListPage> {
   String _formatarData(DateTime data) {
     final dia = data.day.toString().padLeft(2, '0');
     final mes = data.month.toString().padLeft(2, '0');
+
     return '$dia/$mes/${data.year}';
   }
 
   IconData _iconeSituacao(
-      SituacaoRegistro situacao,
-      ) {
+    SituacaoRegistro situacao,
+  ) {
     return switch (situacao) {
       SituacaoRegistro.pendente => Icons.schedule,
       SituacaoRegistro.emAndamento => Icons.construction,
@@ -243,9 +249,9 @@ class _RegistroListPageState extends State<RegistroListPage> {
 }
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState ({
+  const _EmptyState({
     required this.onCreate,
-});
+  });
 
   final VoidCallback onCreate;
 
@@ -253,10 +259,11 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-          padding: const EdgeInsets.all(23),
+        padding: const EdgeInsets.all(23),
 
         child: Column(
           mainAxisSize: MainAxisSize.min,
+
           children: [
             const Icon(
               Icons.assessment_outlined,
@@ -274,17 +281,16 @@ class _EmptyState extends StatelessWidget {
 
             const Text(
               'Cadastre a primeira visita técnica. '
-                  'Os dados serão salvos no aparelho.',
+              'Os dados serão salvos no aparelho.',
               textAlign: TextAlign.center,
             ),
 
             const SizedBox(height: 20),
 
             FilledButton.icon(
-                onPressed: onCreate,
-                icon: const Icon(Icons.add),
-                label: const Text('Criar registro'),
-
+              onPressed: onCreate,
+              icon: const Icon(Icons.add),
+              label: const Text('Criar registro'),
             ),
           ],
         ),
@@ -296,40 +302,41 @@ class _EmptyState extends StatelessWidget {
 class _ErrorState extends StatelessWidget {
   const _ErrorState({
     required this.onRetry,
-});
+  });
 
   final Future<void> Function() onRetry;
 
   @override
-  Widget build(BuildContext Context) {
+  Widget build(BuildContext context) {
     return Center(
       child: Padding(
-          padding: const EdgeInsetsGeometry.all(32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                  Icons.error_outline,
-                  size: 72,
-                  color: Theme.of(context).colorScheme.error,
-              ),
+        padding: const EdgeInsets.all(32),
 
-              const SizedBox(height: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
 
-              const Text(
-                'Não foi possivel carregar os registros.',
-              ),
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 72,
+              color: Theme.of(context).colorScheme.error,
+            ),
 
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
+            const Text(
+              'Não foi possível carregar os registros.',
+            ),
 
-              OutlinedButton.icon(
-                  onPressed: onRetry,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Tentar novamente'),
-              ),
-            ],
-          ),
+            const SizedBox(height: 16),
+
+            OutlinedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Tentar novamente'),
+            ),
+          ],
+        ),
       ),
     );
   }
