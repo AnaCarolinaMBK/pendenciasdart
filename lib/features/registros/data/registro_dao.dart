@@ -4,12 +4,14 @@ import '../../../core/database/app_database.dart';
 import '../domain/categoria.dart';
 import '../domain/registro_campo.dart';
 
+//Classe é responsável pelas operações no banco relacionadas aos registros e categorias.
 class RegistroDao {
 
   const RegistroDao(this._appDatabase);
 
   final AppDatabase _appDatabase;
 
+  //busca todas as categorias cadastradas.
   Future<List<Categoria>> listaCategoria() async {
     final db = await _appDatabase.database;
 
@@ -23,7 +25,7 @@ class RegistroDao {
         .toList(growable: false);
 
   }
-
+   //Busca todos os registros
   Future<List<RegistroCampo>> listar() async{
     final db = await _appDatabase.database;
 
@@ -39,6 +41,8 @@ class RegistroDao {
         .toList(growable: false);
   }
 
+
+    //Busca um registro específico
   Future<RegistroCampo?> buscarPorId(String id) async {
     final db = await _appDatabase.database;
 
@@ -60,6 +64,7 @@ class RegistroDao {
 
   }
 
+  //Cadastra um registro
   Future<void> insert(RegistroCampo registro) async {
 
     final db = await _appDatabase.database;
@@ -72,6 +77,7 @@ class RegistroDao {
     );
   }
 
+  //Altera um registro
   Future<void> atualizar(RegistroCampo registro) async {
     final db = await _appDatabase.database;
 
@@ -90,6 +96,7 @@ class RegistroDao {
   }
 
 
+  //Exclui um registro
   Future<void> remover(String id) async {
 
     final db = await _appDatabase.database;
