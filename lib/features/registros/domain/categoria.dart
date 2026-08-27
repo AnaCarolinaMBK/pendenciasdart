@@ -1,3 +1,4 @@
+// Modelo de categoria: armazena ID e nome e converte dados do banco em objeto.
 class Categoria{
   const Categoria({
     required this.id,

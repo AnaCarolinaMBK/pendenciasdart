@@ -1,6 +1,8 @@
 import 'categoria.dart';
 import 'registro_campo.dart';
 
+
+// Interface que define os métodos para interagir com o repositório de registros de campo.
 abstract interface class RegistroRepository {
 
   Future<List<RegistroCampo>> listar();

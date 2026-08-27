@@ -3,6 +3,7 @@ import '../domain/registro_campo.dart';
 import '../domain/registro_repository.dart';
 import 'registro_form_page.dart';
 
+// Tela que exibe a lista de registros de campo.
 class RegistroListPage extends StatefulWidget {
   const RegistroListPage({
     super.key,
@@ -17,6 +18,8 @@ class RegistroListPage extends StatefulWidget {
   }
 }
 
+// Estado da tela de lista de registros de campo. 
+//Controla a exibição da lista, o carregamento dos dados e as ações do usuário.
 class _RegistroListPageState extends State<RegistroListPage> {
   late Future<List<RegistroCampo>> _registrosFuture;
 
@@ -34,6 +37,8 @@ class _RegistroListPageState extends State<RegistroListPage> {
     await _registrosFuture;
   }
 
+
+// Abre o formulário para criar ou editar um registro de campo.
   Future<void> _abrirFormulario([
     RegistroCampo? registro,
   ]) async {
@@ -53,6 +58,8 @@ class _RegistroListPageState extends State<RegistroListPage> {
     }
   }
 
+
+// Confirma a exclusão de um registro de campo e remove-o do repositório se confirmado.
   Future<void> _confirmarExclusao(
     RegistroCampo registro,
   ) async {
@@ -89,6 +96,9 @@ class _RegistroListPageState extends State<RegistroListPage> {
       return;
     }
 
+
+// Tenta remover o registro do repositório e recarrega a lista.
+// Se ocorrer um erro, exibe uma mensagem de erro.
     try {
       await widget.repository.remover(registro.id);
 
@@ -108,6 +118,7 @@ class _RegistroListPageState extends State<RegistroListPage> {
     }
   }
 
+  // Constrói a interface da tela de lista de registros de campo.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,6 +173,7 @@ class _RegistroListPageState extends State<RegistroListPage> {
                 88,
               ),
 
+              
               itemCount: registros.length,
 
               separatorBuilder: (_, _) {
@@ -229,6 +241,9 @@ class _RegistroListPageState extends State<RegistroListPage> {
     );
   }
 
+  // Formata uma data para exibição no formato DD/MM/AAAA.
+  
+
   String _formatarData(DateTime data) {
     final dia = data.day.toString().padLeft(2, '0');
     final mes = data.month.toString().padLeft(2, '0');
@@ -247,6 +262,7 @@ class _RegistroListPageState extends State<RegistroListPage> {
   }
 }
 
+// Estado exibido quando não há registros cadastrados.
 class _EmptyState extends StatelessWidget {
   const _EmptyState({
     required this.onCreate,
@@ -298,6 +314,8 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
+
+// Estado exibido quando ocorre um erro ao carregar os registros.
 class _ErrorState extends StatelessWidget {
   const _ErrorState({
     required this.onRetry,

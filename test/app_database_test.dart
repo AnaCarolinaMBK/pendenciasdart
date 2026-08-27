@@ -5,17 +5,23 @@ import 'package:pendencias/core/database/app_database.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+
+// Testes de integração com o banco de dados.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   sqfliteFfiInit();
-
+   
+  // Variáveis para armazenar o diretório temporário e a instância do banco de dados.
   late Directory temporaryDirectory;
   late AppDatabase appDatabase;
 
+  // Cria um banco de dados temporário para cada teste.
   setUp(() async {
     temporaryDirectory = await Directory.current.createTempSync(
       'registro_campo_database_test_',
     );
+
+    // Cria uma instância do banco de dados usando o caminho temporário.
 
     appDatabase = AppDatabase(
       factory: databaseFactoryFfi,
@@ -26,6 +32,8 @@ void main() {
     );
   });
 
+  // Fecha a conexão com o banco de dados e remove o diretório temporário após cada teste.
+
   tearDown(() async {
     await appDatabase.close();
 
@@ -34,6 +42,8 @@ void main() {
     }
   });
 
+
+  // Teste de integração: verifica se o banco de dados é aberto, se a configuração de foreign_keys está ativada e se a conexão é reutilizada.
   test(
     'abre o banco, ativa foreign_keys e reutiliza a conexão',
         () async {
@@ -43,7 +53,7 @@ void main() {
       final pragmaResult = await firstConnection.rawQuery(
         'PRAGMA foreign_keys',
       );
-
+     
       expect(
         firstConnection.isOpen,
         isTrue,
@@ -61,6 +71,7 @@ void main() {
     },
   );
 
+// Teste de integração: verifica se as tabelas e índices esperados foram criados no banco de dados.
   test(
     'cria as tabelas e os indices esperados',
         () async {
@@ -103,6 +114,7 @@ void main() {
       );
     },
   );
+
 
   test(
     'insere as quatro categorias iniciais',
@@ -165,6 +177,7 @@ void main() {
       );
     },
   );
+
 
   test(
     'close encerra a conexão',

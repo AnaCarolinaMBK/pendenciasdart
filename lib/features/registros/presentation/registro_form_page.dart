@@ -6,7 +6,7 @@ import '../domain/registro_campo.dart';
 import '../domain/registro_repository.dart';
 
 
-// StatefulWidget = tela que pode mudar durante o uso.
+// Tela de formulário para criar ou editar um registro de campo.
 class RegistroFormPage extends StatefulWidget {
 
 
@@ -31,7 +31,7 @@ class RegistroFormPage extends StatefulWidget {
 }
 
 
-// variáveis e funções que controlam a tela.
+// Estado da tela de formulário.
 class _RegistroFormPageState extends State<RegistroFormPage> {
 
   // Usado para validar os campos do formulário.

@@ -1,15 +1,19 @@
+//Define em que situação está a pendência
 enum SituacaoRegistro {
   pendente,
   emAndamento,
   concluida,
 }
 
+//Controla se os dados foram sincronizados
 enum StatusSincronizacao {
   pendente,
   sincronizado,
   erro,
 }
 
+
+//guarda informações sobre o registro de campo
 class RegistroCampo {
   const RegistroCampo({
     required this.id,
@@ -45,6 +49,8 @@ class RegistroCampo {
   final DateTime criadoEm;
   final DateTime atualizadoEm;
 
+
+// Converte o objeto em um mapa de dados para ser salvo no banco.
   Map<String, Object?> toMap() {
     return {
       'id': id,
@@ -62,6 +68,7 @@ class RegistroCampo {
     };
   }
 
+// Constrói um objeto a partir de um mapa de dados recuperado do banco.
   factory RegistroCampo.fromMap(Map<String, Object?> map) {
     return RegistroCampo(
       // Recupera os valores obrigatórios com seus respectivos tipos.

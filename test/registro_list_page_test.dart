@@ -5,6 +5,7 @@ import 'package:pendencias/features/registros/domain/registro_campo.dart';
 import 'package:pendencias/features/registros/domain/registro_repository.dart';
 import 'package:pendencias/main.dart';
 
+
 void main() {
   testWidgets(
     'apresenta o estado vazio quando não existem registros',
@@ -30,6 +31,8 @@ void main() {
   );
 }
 
+
+// Implementação de um repositório vazio para testes.
 class _RepositorioVazio implements RegistroRepository {
   @override
   Future<RegistroCampo?> buscarPorId(String id) async {
@@ -51,6 +54,8 @@ class _RepositorioVazio implements RegistroRepository {
     ];
   }
 
+  
+ // Implementações vazias para os métodos de atualização, inserção e remoção.
   @override
   Future<void> atualizar(RegistroCampo registro) async {}
 
