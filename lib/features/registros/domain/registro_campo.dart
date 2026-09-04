@@ -26,6 +26,7 @@ class RegistroCampo {
     this.fotoPath,
     this.latitude,
     this.longitude,
+    this.removido = false,
     required this.statusSincronizacao,
     required this.criadoEm,
     required this.atualizadoEm,
@@ -43,6 +44,8 @@ class RegistroCampo {
 
   final double? latitude;
   final double? longitude;
+
+  final bool removido;
 
   final StatusSincronizacao statusSincronizacao;
 
@@ -62,6 +65,7 @@ class RegistroCampo {
       'foto_path': fotoPath,
       'latitude': latitude,
       'longitude': longitude,
+      'removido': removido ? 1 :0,
       'status_sync': statusSincronizacao.name,
       'criado_em': criadoEm.toIso8601String(),
       'atualizado_em': atualizadoEm.toIso8601String(),
@@ -101,6 +105,8 @@ class RegistroCampo {
       // Por isso, o valor é lido como num e convertido para double.
       latitude: (map['latitude'] as num?)?.toDouble(),
       longitude: (map['longitude'] as num?)?.toDouble(),
+
+      removido: (map['removido'] as int? ?? 0) ==1,
 
       // Reconstrói o status de sincronização pelo nome.
       statusSincronizacao: StatusSincronizacao.values.byName(
